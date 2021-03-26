@@ -16,6 +16,8 @@ int main(void) {
 	
 	printf("\n\n- Numero de PAUs = %i", plantas*vivplanta);
 	printf(" + 1 (obligatorio prever ascensor) = %i PAUs", plantas*vivplanta+1);
+	if( (plantas+1<4) && plantas*vivplanta+1 <= 16 )  printf("\n- Se permite recinto unico, RITU.");
+		else printf("\n- Se requiere RITI+RITS.");
 		
 	// Pares o pares trenzados
 	if (tipopares == 's') printf("\n- Pares trenzados cat6 o superior. Se necesitan %i cables (contando reserva de planta).\n", (int)ceil((plantas*vivplanta+1)*1.2));
