@@ -2,41 +2,57 @@
 #include <math.h>
 
 int plantas = 0;
-int vivplanta = 0;
+int viviendas = 0;
 char tipopares = 'a';
+int regletassalida = 0;
+int regletasentrada = 0;
 
 int main(void) {
 	// Introduccion de datos
-	printf("\nIntroduce numero de plantas: ");
+	printf("\nIntroduce numero de plantas EXCLUYENDO bajo: ");
 	scanf("%i", &plantas);
-	printf("\nIntroduce numero de viviendas/planta: ");
-	scanf("%i", &vivplanta);
-	printf("\n¿La distancia entre RITI/RITU y PAU más lejano es inferior a 100 metros (s/n)?");
+	printf("\nIntroduce numero total de viviendas (generalmente multiplica plantas · viviendas/planta): ");
+	scanf("%i", &viviendas);
+	printf("\n¿La distancia entre RITI/RITU y PAU más lejano MENOS de 100 metros (s/n)?");
 	scanf(" %c", &tipopares);
 	
-	printf("\n\n- Numero de PAUs = %i", plantas*vivplanta);
-	printf(" + 1 (obligatorio prever ascensor) = %i PAUs", plantas*vivplanta+1);
-	if( (plantas+1<4) && plantas*vivplanta+1 <= 16 )  printf("\n- Se permite recinto unico, RITU.");
+	printf("\n\n- Numero de PAUs = %i", viviendas);
+	printf(" + 1 (obligatorio prever ascensor) = %i PAUs", viviendas+1);
+	if( (plantas+1<4) && viviendas+1 <= 16 )  printf("\n- Se permite recinto unico, RITU.");
 		else printf("\n- Se requiere RITI+RITS.");
 		
 	// Pares o pares trenzados
-	if (tipopares == 's') printf("\n- Pares trenzados cat6 o superior. Se necesitan %i cables (contando reserva de planta).\n", (int)ceil((plantas*vivplanta+1)*1.2));
-	if (tipopares == 'n') 
+	if (tipopares == 's') // pares trenzados
+		{
+			printf("\n- Pares trenzados cat6 o superior. Se necesitan %i cables (contando reserva de planta).", (int)ceil((viviendas+1)*1.2));
+			
+			regletassalida = (int)ceil((viviendas+1)*1.2);	
+			printf("\n  Patch panel de salida: %i tomas RJ-45.", (int)ceil((viviendas+1)*1.2));
+			if (viviendas+1 > 10) regletasentrada = (int)ceil(regletassalida*1.5);
+			if (viviendas+1 <= 10) regletasentrada = (int)(regletassalida*2);
+			printf("\n  Patch panel de entrada: %i tomas RJ-45.", regletasentrada);
+		}
+	if (tipopares == 'n') // pares 
 		{
 			printf("\n- Pares en topología ");
-			if ((plantas*vivplanta+1)*2 <= 30 ) printf("estrella.");
-			if ((plantas*vivplanta+1)*2 > 30 ) printf("manguera multipar.");
-			printf(" Se necesitan %i pares (contando reserva de planta).\n",(int)ceil((plantas*vivplanta+1)*2*1.2));
+			if ((viviendas+1)*2 <= 30 ) printf("estrella.");
+			if ((viviendas+1)*2 > 30 ) printf("manguera multipar.");
+			printf(" Se necesitan %i pares (contando reserva de planta).",(int)ceil((viviendas+1)*2*1.2));
+			
+			regletassalida = (int)ceil((viviendas+1)*2*1.2);
+			printf("\n  Regletas de salida: %i regletas krone de 10 pares.", (int)(ceil(regletassalida/10)));		
+			if (viviendas+1 > 10) regletasentrada = (int)ceil((ceil(regletassalida/10))*1.5);
+			if (viviendas+1 <= 10) regletasentrada = (int)(ceil(regletassalida/10))*2;
+			printf("\n  Patch panel de entrada: %i regletas krone de 10 pares.", regletasentrada);
 		}	
 		
 	// TBA (banda ancha coaxial)	
-	if (plantas*vivplanta+1 <= 20) printf("- TBA coaxial en topologia estrella. Se necesitan %i cables.", plantas*vivplanta+1);
-	if (plantas*vivplanta+1 > 20) printf("- TBA coaxial en topologia arbol-rama. Se necesitan %i cables.", plantas*vivplanta+1);	
+	if (viviendas+1 <= 20) printf("\n- TBA coaxial en topologia estrella. Se necesitan %i cables.", viviendas+1);
+	if (viviendas+1 > 20) printf("\n- TBA coaxial en topologia arbol-rama. Se necesitan %i cables.", viviendas+1);	
 		
 	// Fibra optica
-	if (plantas*vivplanta+1 <= 20) printf("\n- Fibra optica en topologia estrella. Se necesitan %i fibras.", (int)ceil((plantas*vivplanta+1)*2*1.2));
-	if (plantas*vivplanta+1 > 20) printf("\n- Fibra optica en topologia segregacion. Se necesitan %i fibras.", (int)ceil((plantas*vivplanta+1)*2*1.2));	
-		
-	
+	if (viviendas+1 <= 20) printf("\n- Fibra optica en topologia estrella. Se necesitan %i fibras.", (int)ceil((viviendas+1)*2*1.2));
+	if (viviendas+1 > 20) printf("\n- Fibra optica en topologia segregacion. Se necesitan %i fibras.", (int)ceil((viviendas+1)*2*1.2));	
+			
 	return 0;
 }
